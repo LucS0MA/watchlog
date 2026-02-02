@@ -1,22 +1,25 @@
 import express from "express";
+import fs from "fs";
 
 import { pool } from "./config/database.js";
-import { TableRow } from "./types/tableRow.js";
+import { movieRouter } from "./routes/movie.routes.js";
+import { movieTitle } from "./types/tableRow.types.ts.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
 
+const content = fs.readFileSync("src/lib/seed.sql", "utf-8");
+
+app.use("/movies", movieRouter);
+
 const dbConnection = async () => {
   try {
-    const { rows } = await pool.query<TableRow>(
-      `SELECT tablename
-    FROM pg_catalog.pg_tables
-    WHERE schemaname = 'public';`,
-    );
+    const { rows } = await pool.query<movieTitle>(`SELECT * FROM movies;`);
     console.log(
-      "📦 Tables found:",
-      rows.map((table) => table.tablename),
+      "📦 Movies found:",
+      rows.map((movies) => movies.title),
     );
+    await pool.query(content);
     console.log("✅ Database connected");
     app.get("/", (_req, res) => {
       res.send("API boilerplate");
