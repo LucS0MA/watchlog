@@ -67,12 +67,12 @@ npm run coverage    # generate coverage report
 
 ### Folder Structure
 src/
-├─ index.ts         # Entry point
-├─ routes/          # API routes
-├─ controllers/     # HTTP logic
-├─ services/        # Business logic
-├─ models/          # Data models
-├─ middlewares/     # Express middlewares
-├─ utils/           # Helper functions
-├─ types/           # Global TypeScript types
-└─ __tests__/       # Unit & integration tests
+├─ index.ts # Entry point
+├─ routes/ # API routes
+├─ controllers/ # HTTP logic
+├─ services/ # Business logic
+├─ models/ # Data models
+├─ middlewares/ # Express middlewares
+├─ utils/ # Helper functions
+├─ types/ # Global TypeScript types
+└─ tests/ # Unit & integration tests
