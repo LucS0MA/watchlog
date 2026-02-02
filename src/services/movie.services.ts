@@ -2,7 +2,7 @@ import { pool } from "../config/database.js";
 import { movie } from "../types/movies.types.js";
 
 export const MovieService = {
-  getAll: async (): Promise<movie[]> => {
+  getAll: async (): Promise<movie[] | null> => {
     const { rows } = await pool.query<movie>("SELECT * FROM movies");
     return rows;
   },
