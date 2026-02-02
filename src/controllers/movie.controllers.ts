@@ -22,8 +22,7 @@ export const getMovieById = async (req: Request, res: Response) => {
     const id = String(req.params.id);
 
     const movie = await MovieService.getMovieById(id);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (movie === null) {
+    if (!movie) {
       return res.status(404).json({ error: "Movie not found" });
     }
 
