@@ -2,7 +2,16 @@ import { pool } from "../config/database.js";
 import { movie } from "../types/movies.types.js";
 
 export const MovieService = {
-  getAll: async (): Promise<movie[] | null> => {
+  deleteMovie: async (id: string): Promise<false | true> => {
+    const result = await pool.query<movie>("DELETE FROM movies WHERE id = $1", [
+      id,
+    ]);
+    if (result.rowCount === 0) {
+      return false;
+    }
+    return true;
+  },
+  getAll: async (): Promise<movie[]> => {
     const { rows } = await pool.query<movie>("SELECT * FROM movies");
     return rows;
   },

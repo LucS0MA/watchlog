@@ -15,14 +15,13 @@ app.use("/movies", movieRouter);
 const dbConnection = async () => {
   try {
     const { rows } = await pool.query<movieTitle>(`SELECT * FROM movies;`);
-    console.log(
-      "📦 Movies found:",
-      rows.map((movies) => movies.title),
-    );
-    await pool.query(content);
+    if (rows.length === 0) {
+      await pool.query(content);
+      console.log("🌱Database seeded");
+    }
     console.log("✅ Database connected");
     app.get("/", (_req, res) => {
-      res.send("API boilerplate");
+      res.send("API watchlog");
     });
 
     app.listen(port, () => {
