@@ -1,4 +1,4 @@
-export interface movie {
+export interface MovieRow {
   casting: string;
   director: string;
   id: number;

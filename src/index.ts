@@ -10,6 +10,7 @@ const port = process.env.PORT ?? 3000;
 
 const content = fs.readFileSync("src/lib/seed.sql", "utf-8");
 
+app.use(express.json());
 app.use("/movies", movieRouter);
 
 const dbConnection = async () => {
