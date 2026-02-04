@@ -3,6 +3,7 @@ import fs from "fs";
 
 import { pool } from "./config/database.js";
 import { movieRouter } from "./routes/movie.routes.js";
+import { userRouter } from "./routes/user.routes.js";
 import { movieTitle } from "./types/tableRow.types.ts.js";
 
 const app = express();
@@ -12,6 +13,7 @@ const content = fs.readFileSync("src/lib/seed.sql", "utf-8");
 
 app.use(express.json());
 app.use("/movies", movieRouter);
+app.use("/users", userRouter);
 
 const dbConnection = async () => {
   try {
