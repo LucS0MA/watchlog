@@ -20,6 +20,13 @@ export default tseslint.config(
   },
   perfectionist.configs["recommended-natural"],
   {
+    files: ["**/*.ts"],
+    rules: {
+      "perfectionist/sort-imports": "off",
+      "@typescript-eslint/no-namespace": "off",
+    },
+  },
+  {
     files: ["**/*.test.ts", "**/*.spec.ts"],
     plugins: {
       vitest,

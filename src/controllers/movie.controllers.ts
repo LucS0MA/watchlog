@@ -53,17 +53,7 @@ export const deleteMovie = async (req: Request, res: Response) => {
 export const createMovie = async (req: Request, res: Response) => {
   try {
     const movieData = req.body as Movie;
-
-    const movie = new Movie(
-      movieData.casting,
-      movieData.director,
-      movieData.posterurl,
-      movieData.synopsis,
-      movieData.title,
-      movieData.year,
-    );
-
-    const createdMovie = await MovieService.createMovie(movie);
+    const createdMovie = await MovieService.createMovie(movieData);
     console.log(createMovie);
     res.status(201).json(createdMovie);
   } catch (err) {

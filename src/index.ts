@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import fs from "fs";
 
@@ -11,6 +12,7 @@ const port = process.env.PORT ?? 3000;
 
 const content = fs.readFileSync("src/lib/seed.sql", "utf-8");
 
+app.use(cookieParser());
 app.use(express.json());
 app.use("/movies", movieRouter);
 app.use("/users", userRouter);
