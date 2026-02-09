@@ -33,3 +33,22 @@ export const getUserById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res.status(404).json({ error: "No id provided" });
+    }
+
+    const userDeleted = await userService.deleteUser(id);
+    res.status(200).json(userDeleted);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Failed to delete the user",
+      message: err instanceof Error ? err.message : "unkown error",
+    });
+  }
+};
