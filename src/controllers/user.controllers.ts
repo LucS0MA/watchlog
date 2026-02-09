@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { User } from "../models/user.models.js";
 import { userService } from "../services/user.services.js";
+import { UserLogin } from "../types/user.types.js";
 
 export const getAllUsers = async (_req: Request, res: Response) => {
   try {
@@ -54,7 +55,26 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
+  try {
+    const loginData = req.body as UserLogin;
+    const token = await userService.login(loginData);
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.status(200).json({ message: "User connected !" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Failed connection",
+      message: err instanceof Error ? err.message : "unkown error",
+    });
+  }
+};
+
+export const register = async (req: Request, res: Response) => {
   try {
     const newUserData = req.body as User;
     const result = await userService.createUser(newUserData);

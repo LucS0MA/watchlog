@@ -1,3 +1,15 @@
+export interface UserCreation {
+  email: string;
+  password: string;
+  username: string;
+}
+
+export interface UserLogin {
+  email: string;
+  password: string;
+  username: string;
+}
+
 export interface UserPublic {
   email: string;
   id: number;
