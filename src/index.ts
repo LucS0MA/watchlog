@@ -6,6 +6,7 @@ import { pool } from "./config/database.js";
 import { movieRouter } from "./routes/movie.routes.js";
 import { userRouter } from "./routes/user.routes.js";
 import { movieTitle } from "./types/tableRow.types.ts.js";
+import { reviewRouter } from "./routes/review.routes.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/movies", movieRouter);
 app.use("/users", userRouter);
+app.use("/reviews", reviewRouter);
 
 const dbConnection = async () => {
   try {
