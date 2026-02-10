@@ -5,11 +5,10 @@ import { pool } from "../config/database.js";
 export const reviewService = {
   createReview: async (reviewData: Review): Promise<ReviewRow> => {
     const newReview = await pool.query<ReviewRow>(
-      "INSERT INTO reviews (rating, comment, created_at, movie_id, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO reviews (rating, comment, movie_id, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [
         reviewData.rating,
         reviewData.comment,
-        reviewData.created_at,
         reviewData.movie_id,
         reviewData.user_id,
       ],

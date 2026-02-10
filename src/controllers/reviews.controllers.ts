@@ -19,12 +19,11 @@ export const getReviewByid = async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
     if (!id) {
-      return res.status(400).json({ message: "No id provided" });
+      return res.status(400).json({ message: "Invalid id" });
     }
     const review = await reviewService.getReviewById(id);
-    console.log("in controller", review);
     if (!review) {
-      return res.status(400).json({ message: "Review not found" });
+      return res.status(404).json({ message: "Review not found" });
     }
     res.status(200).json({ message: "Review retrieved ! ", review });
   } catch (err) {
@@ -40,7 +39,7 @@ export const deleteReview = async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
     if (!id) {
-      return res.status(400).json({ message: "No id provided" });
+      return res.status(400).json({ message: "Invalid id" });
     }
     const reviewDeleted = await reviewService.deleteReview(id);
     if (!reviewDeleted) {
@@ -58,7 +57,6 @@ export const deleteReview = async (req: Request, res: Response) => {
 export const createReview = async (req: Request, res: Response) => {
   try {
     const reviewData = req.body as Review;
-    reviewData.created_at = new Date();
     const newReview = await reviewService.createReview(reviewData);
     res.status(200).json({ message: "Review created", newReview });
   } catch (err) {
@@ -73,7 +71,7 @@ export const updateReview = async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
     if (!id) {
-      return res.status(400).json({ message: "No id provided" });
+      return res.status(400).json({ message: "Invalid id" });
     }
     const reviewData = req.body as Partial<Review>;
     const reviewUpdated = await reviewService.updateReview(id, reviewData);
