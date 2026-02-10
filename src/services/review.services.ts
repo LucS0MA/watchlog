@@ -37,9 +37,9 @@ export const reviewService = {
   updateReview: async (
     id: string,
     updateReviewData: Partial<Review>,
-  ): Promise<ReviewRow> => {
+  ): Promise<null | ReviewRow> => {
     const reviewUpdated = await pool.query<ReviewRow>(
-      "UPDATE REVIEWS SET rating = COALESCE($1, rating), comment = COALESCE($2, comment), movie_id = COALESCE($4, movie_id), user_id = COALESCE($5, user_id) WHERE id = $6 RETURNING *",
+      "UPDATE REVIEWS SET rating = COALESCE($1, rating), comment = COALESCE($2, comment), movie_id = COALESCE($3, movie_id), user_id = COALESCE($4, user_id) WHERE id = $5 RETURNING *",
       [
         updateReviewData.rating,
         updateReviewData.comment,
@@ -48,6 +48,6 @@ export const reviewService = {
         id,
       ],
     );
-    return reviewUpdated.rows[0];
+    return reviewUpdated.rows[0] ?? null;
   },
 };

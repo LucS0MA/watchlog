@@ -77,7 +77,9 @@ export const updateReview = async (req: Request, res: Response) => {
     }
     const reviewData = req.body as Partial<Review>;
     const reviewUpdated = await reviewService.updateReview(id, reviewData);
-    console.log("in controller", reviewUpdated);
+    if (!reviewUpdated) {
+      res.status(404).json({ message: "Review not found" });
+    }
     res.status(200).json({ message: "Review updated !", reviewUpdated });
   } catch (err) {
     res.status(500).json({
