@@ -42,9 +42,9 @@ export const deleteReview = async (req: Request, res: Response) => {
     if (!id) {
       return res.status(400).json({ message: "No id provided" });
     }
-    const reviewDeleted = await reviewService.deteleReview(id);
+    const reviewDeleted = await reviewService.deleteReview(id);
     if (!reviewDeleted) {
-      return res.status(400).json({ message: "Review not found" });
+      return res.status(404).json({ message: "Review not found" });
     }
     res.status(200).json({ message: "Review deleted", reviewDeleted });
   } catch (err) {

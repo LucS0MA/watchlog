@@ -16,7 +16,7 @@ export const reviewService = {
     );
     return newReview.rows[0];
   },
-  deteleReview: async (id: string): Promise<null | ReviewRow> => {
+  deleteReview: async (id: string): Promise<null | ReviewRow> => {
     const reviewToDelete = await pool.query<ReviewRow>(
       "DELETE FROM reviews WHERE id = $1 RETURNING *",
       [id],
@@ -32,25 +32,22 @@ export const reviewService = {
       "SELECT * FROM reviews WHERE id = $1",
       [id],
     );
-    console.log("in service", review.rows[0]);
-    return review.rows[0] ?? "";
+    return review.rows[0] ?? null;
   },
   updateReview: async (
     id: string,
     updateReviewData: Partial<Review>,
   ): Promise<ReviewRow> => {
     const reviewUpdated = await pool.query<ReviewRow>(
-      "UPDATE REVIEWS SET rating = COALESCE($1, rating), comment = COALESCE($2, comment), created_at = COALESCE($3, created_at), movie_id = COALESCE($4, movie_id), user_id = COALESCE($5, user_id) WHERE id = $6 RETURNING *",
+      "UPDATE REVIEWS SET rating = COALESCE($1, rating), comment = COALESCE($2, comment), movie_id = COALESCE($4, movie_id), user_id = COALESCE($5, user_id) WHERE id = $6 RETURNING *",
       [
         updateReviewData.rating,
         updateReviewData.comment,
-        updateReviewData.created_at,
         updateReviewData.movie_id,
         updateReviewData.user_id,
         id,
       ],
     );
-    console.log("in service", reviewUpdated.rows[0]);
     return reviewUpdated.rows[0];
   },
 };
