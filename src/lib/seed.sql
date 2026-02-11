@@ -2,15 +2,19 @@
 -- SEED — watchlog
 -- ============================================================
 
--- On vidange d'abord pour pouvoir relancer le seed proprement
+TRUNCATE TABLE order_items CASCADE;
+TRUNCATE TABLE orders CASCADE;
+TRUNCATE TABLE products CASCADE;
 TRUNCATE TABLE reviews CASCADE;
 TRUNCATE TABLE movies  CASCADE;
 TRUNCATE TABLE users   CASCADE;
 
--- Réinitialise les séquences (SERIAL)
-ALTER SEQUENCE users_id_seq   RESTART WITH 1;
-ALTER SEQUENCE movies_id_seq  RESTART WITH 1;
-ALTER SEQUENCE reviews_id_seq RESTART WITH 1;
+ALTER SEQUENCE users_id_seq       RESTART WITH 1;
+ALTER SEQUENCE movies_id_seq      RESTART WITH 1;
+ALTER SEQUENCE reviews_id_seq     RESTART WITH 1;
+ALTER SEQUENCE products_id_seq    RESTART WITH 1;
+ALTER SEQUENCE orders_id_seq      RESTART WITH 1;
+ALTER SEQUENCE order_items_id_seq RESTART WITH 1;
 
 -- ============================================================
 -- USERS
@@ -148,12 +152,9 @@ INSERT INTO movies (title, posterUrl, synopsis, casting, director, year) VALUES
 
 -- ============================================================
 -- REVIEWS
--- Chaque user note quelques films (pas tous les mêmes)
--- UNIQUE (user_id, movie_id) → pas de doublons
 -- ============================================================
 INSERT INTO reviews (rating, comment, created_at, movie_id, user_id) VALUES
 
-  -- Alice (user 1) note 6 films
   (10, 'Un chef-d''œuvre absolu, impossible à oublier.', '2024-11-12 20:30:00', 1, 1),  -- The Godfather
   (9,  'Nolan à son meilleur. Chaque visionnage révèle quelque chose de nouveau.', '2024-11-15 22:10:00', 2, 1),  -- Inception
   (8,  'Brillant mais un peu long. Le deuxième acte est énorme.', '2024-12-01 19:45:00', 3, 1),  -- Parasite
@@ -161,14 +162,12 @@ INSERT INTO reviews (rating, comment, created_at, movie_id, user_id) VALUES
   (9,  'La bande originale alone vaut le coup. Visuellement dingue.', '2025-01-02 23:15:00', 5, 1),  -- Interstellar
   (6,  'Bien fait mais pas aussi bon qu''on en parle.', '2025-01-18 18:30:00', 8, 1),  -- The Matrix
 
-  -- Bob (user 2) note 5 films
   (7,  'Classic. Mais j''ai du mal à accrocher au début.', '2024-10-22 21:00:00', 1, 2),  -- The Godfather
   (10, 'Le meilleur film que j''ai jamais vu. Point.', '2024-10-25 20:00:00', 6, 2),  -- Shawshank
   (8,  'Tarantino fait ce qu''il fait le mieux : du dialogue qui claque.', '2024-11-03 22:30:00', 4, 2),  -- Pulp Fiction
   (5,  'Pas mal mais j''ai attendu plus de Villeneuve.', '2024-12-20 19:00:00', 10, 2),  -- Blade Runner 2049
   (9,  'Intense du début à la fin. J.K. Simmons est incroyable.', '2025-01-10 20:45:00', 9, 2),  -- Whiplash
 
-  -- Sarah (user 3) note 6 films
   (8,  'Parasite est un masterclass de mise en scène.', '2024-09-14 21:30:00', 3, 3),  -- Parasite
   (10, 'Fury Road est juste de la pure adrénaline. Parfait.', '2024-09-20 22:00:00', 11, 3),  -- Mad Max
   (7,  'Belle histoire, Russell Crowe excellente dedans.', '2024-10-05 19:15:00', 12, 3),  -- Gladiator
@@ -176,7 +175,6 @@ INSERT INTO reviews (rating, comment, created_at, movie_id, user_id) VALUES
   (8,  NULL, '2024-12-15 23:00:00', 2, 3),  -- Inception
   (6,  'Impressionnant techniquement mais l''histoire reste simple.', '2025-01-22 18:45:00', 13, 3);  -- 1917
 
-  -- Thomas (user 4) note 5 films
 INSERT INTO reviews (rating, comment, created_at, movie_id, user_id) VALUES
   (9,  'Ledger pour la dernière fois... absolument magnifique.', '2024-08-10 21:00:00', 15, 4),  -- The Dark Knight
   (10, 'Fight Club m''a changer la façon de voir les choses.', '2024-08-18 22:30:00', 7, 4),  -- Fight Club
@@ -185,10 +183,105 @@ INSERT INTO reviews (rating, comment, created_at, movie_id, user_id) VALUES
   (6,  NULL, '2024-11-05 21:30:00', 6, 4);  -- Shawshank
 
 -- ============================================================
--- Vérification rapide après exécution :
---   SELECT u.username, m.title, r.rating, r.comment
---   FROM reviews r
---   JOIN users u ON r.user_id = u.id
---   JOIN movies m ON r.movie_id = m.id
---   ORDER BY u.username, r.rating DESC;
+-- SEED SHOP 
 -- ============================================================
+
+-- ============================================================
+-- PRODUCTS
+-- ============================================================
+INSERT INTO products (name, description, price, image_url, stock) VALUES
+  (
+    'T-shirt Letterbox Classic',
+    'T-shirt 100% coton avec le logo Watchlog brodé. Confortable et stylé pour les cinéphiles.',
+    24.99,
+    'https://placehold.co/400x500/1a1d27/e8735a?text=Letterbox+Tee',
+    50
+  ),
+  (
+    'Mug "Director''s Cut"',
+    'Mug en céramique 350ml avec citation culte de films. Parfait pour ton café du matin.',
+    12.99,
+    'https://placehold.co/400x400/1a1d27/f0c040?text=Letterbox+Mug',
+    100
+  ),
+  (
+    'Poster Rétro "Cinéma"',
+    'Affiche vintage 50x70cm imprimée sur papier premium. Design minimaliste inspiré des films classiques.',
+    19.99,
+    'https://placehold.co/500x700/1a1d27/60a5fa?text=Retro+Poster',
+    30
+  ),
+  (
+    'Casquette Snapback',
+    'Casquette ajustable avec broderie Watchlog. Style streetwear pour les fans.',
+    18.99,
+    'https://placehold.co/400x400/1a1d27/4ade80?text=Letterbox+Cap',
+    75
+  ),
+  (
+    'Stickers Pack (x10)',
+    'Pack de 10 stickers vinyle waterproof avec des icônes de films cultes.',
+    7.99,
+    'https://placehold.co/400x400/1a1d27/a78bfa?text=Sticker+Pack',
+    200
+  ),
+  (
+    'Tote Bag Canvas',
+    'Sac en toile robuste 100% coton. Idéal pour transporter tes DVDs vintage.',
+    14.99,
+    'https://placehold.co/400x500/1a1d27/e8735a?text=Tote+Bag',
+    60
+  ),
+  (
+    'Hoodie "Cinephile"',
+    'Sweat à capuche premium avec design minimaliste. Chaud et confortable.',
+    44.99,
+    'https://placehold.co/400x500/1a1d27/f0c040?text=Letterbox+Hoodie',
+    40
+  ),
+  (
+    'Carnet Moleskin',
+    'Carnet 120 pages lignées pour noter tes critiques de films. Couverture rigide.',
+    16.99,
+    'https://placehold.co/400x500/1a1d27/60a5fa?text=Film+Journal',
+    80
+  );
+
+-- ============================================================
+-- ORDERS (Commandes de test)
+-- ============================================================
+
+INSERT INTO orders (user_id, total_amount, status, shipping_address, created_at) VALUES
+  (1, 37.98, 'delivered', '12 Rue de la Cinémathèque, 75013 Paris, France', '2024-12-15 14:30:00');
+
+INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase) VALUES
+  (1, 1, 1, 24.99), 
+  (1, 2, 1, 12.99); 
+
+INSERT INTO orders (user_id, total_amount, status, shipping_address, created_at) VALUES
+  (2, 47.97, 'shipped', '34 Avenue du Film, 69002 Lyon, France', '2025-01-05 10:15:00');
+
+INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase) VALUES
+  (2, 3, 2, 19.99), 
+  (2, 5, 1, 7.99);  
+
+INSERT INTO orders (user_id, total_amount, status, shipping_address, created_at) VALUES
+  (3, 63.98, 'paid', '89 Boulevard des Arts, 33000 Bordeaux, France', '2025-01-20 16:45:00');
+
+INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase) VALUES
+  (3, 7, 1, 44.99), 
+  (3, 4, 1, 18.99); 
+
+INSERT INTO orders (user_id, total_amount, status, shipping_address, created_at) VALUES
+  (4, 55.94, 'pending', '5 Place du Cinéma, 44000 Nantes, France', '2025-01-28 11:00:00');
+
+INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase) VALUES
+  (4, 8, 1, 16.99), 
+  (4, 6, 1, 14.99),  
+  (4, 5, 3, 7.99);  
+
+INSERT INTO orders (user_id, total_amount, status, shipping_address, created_at) VALUES
+  (1, 26.98, 'delivered', '12 Rue de la Cinémathèque, 75013 Paris, France', '2025-02-01 09:20:00');
+
+INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase) VALUES
+  (5, 2, 2, 12.99); 

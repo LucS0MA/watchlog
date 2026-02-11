@@ -1,17 +1,14 @@
 import cookieParser from "cookie-parser";
 import express from "express";
-import fs from "fs";
 
 import { pool } from "./config/database.js";
 import { movieRouter } from "./routes/movie.routes.js";
 import { userRouter } from "./routes/user.routes.js";
-import { movieTitle } from "./types/tableRow.types.ts.js";
 import { reviewRouter } from "./routes/review.routes.js";
+import { NowResult } from "#types/dbConnection.types.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
-
-const content = fs.readFileSync("src/lib/seed.sql", "utf-8");
 
 app.use(cookieParser());
 app.use(express.json());
@@ -21,12 +18,8 @@ app.use("/reviews", reviewRouter);
 
 const dbConnection = async () => {
   try {
-    const { rows } = await pool.query<movieTitle>(`SELECT * FROM movies;`);
-    if (rows.length === 0) {
-      await pool.query(content);
-      console.log("🌱Database seeded");
-    }
-    console.log("✅ Database connected");
+    const { rows } = await pool.query<NowResult>(`SELECT NOW()`);
+    console.log("✅ Database connected at", rows[0].now);
     app.get("/", (_req, res) => {
       res.send("API watchlog");
     });
