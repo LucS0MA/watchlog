@@ -1,6 +1,6 @@
 import { pool } from "../config/database.js";
 import { Movie } from "../models/movie.models.js";
-import { MovieRow } from "../types/movies.types.js";
+import { MovieRow } from "../types/movie.types.js";
 
 export const MovieService = {
   createMovie: async (movie: Movie) => {

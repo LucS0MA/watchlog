@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 export const getAllReviews = async (_req: Request, res: Response) => {
   try {
     const reviews = await reviewService.getAllReviews();
-    res.status(200).json({ message: "All the reviews are retrive", reviews });
+    res.status(200).json(reviews);
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -25,7 +25,7 @@ export const getReviewByid = async (req: Request, res: Response) => {
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
-    res.status(200).json({ message: "Review retrieved ! ", review });
+    res.status(200).json(review);
   } catch (err) {
     console.error(err);
     res.status(500).json({

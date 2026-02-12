@@ -4,7 +4,7 @@ import {
   getAllReviews,
   getReviewByid,
   updateReview,
-} from "../controllers/reviews.controllers.js";
+} from "../controllers/review.controllers.js";
 import { Router } from "express";
 
 export const reviewRouter = Router();
