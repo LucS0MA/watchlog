@@ -1,5 +1,6 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import cors from "cors";
 
 import { pool } from "./config/database.js";
 import { movieRouter } from "./routes/movie.routes.js";
@@ -12,6 +13,8 @@ import { orderItemRouter } from "./routes/orderItem.routes.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
+
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 app.use(cookieParser());
 app.use(express.json());
